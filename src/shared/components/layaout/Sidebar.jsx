@@ -1,12 +1,5 @@
 import {
-  Building2,
-  FileText,
-  School,
-  ClipboardList,
-  Clock,
-  User,
-  Users,
-  ShieldCheck
+  Building2,FileText,School, ClipboardList,Clock,User,Users, ShieldCheck
 } from "lucide-react";
 
 export const Sidebar = () => {
