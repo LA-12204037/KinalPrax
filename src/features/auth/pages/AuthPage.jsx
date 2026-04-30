@@ -1,10 +1,21 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { LoginForm } from "../components/LoginForm";
 import { ForgotPasswordForm } from "../components/ForgotPasswordForm";
 import fondo from "../../../assets/img/fondo.png";
 
 const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(true);
+
+    const navigate = useNavigate();
+
+  useEffect(() => {
+    const role = (localStorage.getItem("userRole") || "").toUpperCase();
+
+    if (role.includes("ADMIN")) {
+      navigate("/dashboard", { replace: true });
+    }
+  }, [navigate]);
 
   return (
     <div className="relative min-h-screen flex items-center justify-center">
