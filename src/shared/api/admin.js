@@ -1,55 +1,95 @@
-import api from "./api";
+import { axiosAdmin } from "../../shared/api/api.js";
+
+
+
+// Robare los necesaios para salvar esta compañia   
+export const getCompanies = async () => {
+  return await axiosAdmin.get("/company");
+};
+
+export const createCompany = async (data) => {
+   return await axiosAdmin.post("/company", data);
+   };
+export const updateCompany = async (id, data) => { 
+  return await axiosAdmin.put(`/company/${id}`, data); 
+};
+export const deactivateCompany = async (id) => 
+  { return await axiosAdmin.put(`/company/${id}/deactivate`); 
+};
+
+
+// Insituciones
+export const getInstitutions = async () => {
+  return await axiosAdmin.get("/institud");
+};
+
+
+
+export const createInstitution = async (data) => {
+  return await axiosAdmin.post("/institud", data, buildFormDataConfig(data));
+};
+
+export const updateInstitution = async (id, data) => {
+  return await axiosAdmin.put(`/institud/${id}`, data, buildFormDataConfig(data));
+};
+
+export const deactivateInstitution = async (id) => {
+  return await axiosAdmin.put(`/institud/${id}/deactivate`);
+};
+
+
+
+
+// Studiantes
+export const getStudentRecords = async () => {
+   return await axiosAdmin.get("/student"); };
+export const createStudentRecord = async (data) => { 
+  return await axiosAdmin.post("/student", data); };
+export const updateStudentRecord = async (id, data) => { 
+  return await axiosAdmin.put(`/student/${id}`, data); };
+
+export const deactivateStudentRecord = async (id, status) => {
+   return await axiosAdmin.put(`/student/${id}`, { estado: status }); };
 /*
-// Productos
-export const getProducts = async () => api.get("/product");
-export const getProductById = async (id) => api.get(`/product/${id}`);
-export const createProduct = async (data) => api.post("/product", data);
-export const updateProduct = async (id, data) => api.put(`/product/${id}`, data);
-export const activateProduct = async (id) => api.put(`/product/${id}/activate`);
-export const deactivateProduct = async (id) => api.put(`/product/${id}/deactivate`);
-
-// Menú
-export const getMenuItems = async () => api.get("/menu");
-export const getMenuItemById = async (id) => api.get(`/menu/${id}`);
-export const createMenuItem = async (data) => api.post("/menu", data);
-export const updateMenuItem = async (id, data) => api.put(`/menu/${id}`, data);
-export const activateMenuItem = async (id) => api.put(`/menu/${id}/activate`);
-export const deactivateMenuItem = async (id) => api.put(`/menu/${id}/deactivate`);
-
-// Órdenes
-export const getOrders = async () => api.get("/order");
-export const getOrderById = async (id) => api.get(`/order/${id}`);
-export const createOrder = async (data) => api.post("/order", data);
-export const updateOrder = async (id, data) => api.put(`/order/${id}`, data);
-export const changeOrderStatus = async (id, status) => api.put(`/order/${id}`, { estado: status });
-
 // Reservaciones
 export const getReservations = async () => api.get("/reservation");
 export const getReservationById = async (id) => api.get(`/reservation/${id}`);
 export const createReservation = async (data) => api.post("/reservation", data);
 export const updateReservation = async (id, data) => api.put(`/reservation/${id}`, data);
 export const changeReservationStatus = async (id, status) => api.put(`/reservation/${id}`, { estado: status });
+*/
+// Usuarios
+export const obtenerUsuarios = async () => {
+   return await axiosAdmin.get("/user"); };
 
-// Mesas
-export const getTables = async () => api.get("/table");
-export const getTableById = async (id) => api.get(`/table/${id}`);
-export const createTable = async (data) => api.post("/table", data);
-export const updateTable = async (id, data) => api.put(`/table/${id}`, data);
-export const changeTableStatus = async (id, status) => api.put(`/table/${id}`, { estado: status });
+export const obtenerUsuario = async (data) => { 
+  return await axiosAdmin.post("/user", data); };
 
-// Eventos
-export const getEvents = async () => api.get("/event");
-export const getEventById = async (id) => api.get(`/event/${id}`);
-export const createEvent = async (data) => api.post("/event", data);
-export const updateEvent = async (id, data) => api.put(`/event/${id}`, data);
-export const changeEventStatus = async (id, status) => api.put(`/event/${id}`, { isActive: status });
+export const actualizarUsuario = async (id, data) => { 
+  return await axiosAdmin.put(`/user/${id}`, data); };
+
+export const deactivateUsuario = async (id, status) => {
+   return await axiosAdmin.put(`/user/${id}`, { estado: status }); };
+
+
+/*
 
 // Mantenimiento
-export const getMaintenanceRecords = async () => api.get("/maintenance");
-export const getMaintenanceById = async (id) => api.get(`/maintenance/${id}`);
-export const createMaintenanceRecord = async (data) => api.post("/maintenance", data);
-export const updateMaintenanceRecord = async (id, data) => api.put(`/maintenance/${id}`, data);
+export const getMaintenanceRecords = async () => {
+  return await axiosAdmin.get("/maintenance");
+};
 
+export const createMaintenanceRecord = async (data) => {
+  return await axiosAdmin.post("/maintenance", data, buildFormDataConfig(data));
+};
+
+export const updateMaintenanceRecord = async (id, data) => {
+  return await axiosAdmin.put(`/maintenance/${id}`, data, buildFormDataConfig(data));
+};
+
+export const deleteMaintenanceRecord = async (id) => {
+  return await axiosAdmin.put(`/maintenance/${id}/deactivate`, { isActive: false });
+};
 // Carritos
 export const getCarts = async () => api.get("/cart");
 export const getCartById = async (id) => api.get(`/cart/${id}`);
@@ -58,7 +98,10 @@ export const updateCart = async (id, data) => api.put(`/cart/${id}`, data);
 
 // Administración general
 export const getAdministration = async () => api.get("/administration");
-export const getAdministrationById = async (id) => api.get(`/administration/${id}`);
+// export const getAdministrationById = async (id) => api.get(`/administration/${id}`);
 export const createAdministration = async (data) => api.post("/administration", data);
 export const updateAdministration = async (id, data) => api.put(`/administration/${id}`, data);
+
+
+
 */

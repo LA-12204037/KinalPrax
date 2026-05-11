@@ -1,51 +1,87 @@
+import { useNavigate, useLocation } from "react-router-dom";
 import {
-  Building2,FileText,School, ClipboardList,Clock,User,Users, ShieldCheck
-} from "lucide-react";
+  BuildingOffice2Icon,
+  DocumentTextIcon,
+  AcademicCapIcon,
+  ClipboardDocumentListIcon,
+  ClockIcon,
+  UserIcon,
+  ShieldCheckIcon,
+  UsersIcon,
+} from '@heroicons/react/24/outline'
 
 export const Sidebar = () => {
+    const navigate = useNavigate();
+  const location = useLocation();
   const items = [
-    { label: "Compañia", icon: Building2 },
-    { label: "Evidecia", icon: FileText },
-    { label: "Instituto", icon: School },
-    { label: "Practica", icon: ClipboardList },
-    { label: "Reporte de horas", icon: Clock },
-    { label: "Estudiante", icon: User },
-    { label: "supervisor", icon: ShieldCheck },
-    { label: "Usuario", icon: Users },
+   { label: "Dashboard", path: "/dashboard", icon: BuildingOffice2Icon },
+    { label: "Compañia", path: "/dashboard/company", icon: BuildingOffice2Icon },
+    { label: "Evidecia", path: "/dashboard/evidence", icon: DocumentTextIcon },
+    { label: "Instituto", path: "/dashboard/institud", icon: AcademicCapIcon },
+    { label: "Practica", path: "/dashboard/practice", icon: ClipboardDocumentListIcon },
+    { label: "Reporte de horas", path: "/dashboard/reposteHoursmodel", icon: ClockIcon },
+    { label: "Reseña", path: "/dashboard/review", icon: ClockIcon },
+    { label: "Estudiante", path: "/dashboard/student", icon: UserIcon },
+    { label: "supervisor", path: "/dashboard/supervisor", icon: ShieldCheckIcon },
+    { label: "task", path: "/dashboard/task", icon: ShieldCheckIcon },
+    { label: "Usuario", path: "/dashboard/user", icon: UsersIcon },
   ];
 
+  const handleLogout = () => {
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("userRole");
+    localStorage.removeItem("userName");
+    navigate("/");
+  };
+
+  const isActive = (path) => {
+    return location.pathname === path || location.pathname.startsWith(`${path}/`);
+  };
+
   return (
-    <aside className="w-60 min-h-[calc(100vh-4rem)] p-4 
-                     bg-[#041F3D]/95 backdrop-blur-md 
-                     border-r border-[#18A7A1]/20">
-
-      <ul className="space-y-2">
-        {items.map((item) => {
-          const Icon = item.icon;
-
-          return (
-            <li key={item.label}>
-              <div className="
-                flex items-center gap-3
-                px-4 py-2 rounded-lg font-medium cursor-pointer
-                text-[#E6E6E6] 
-                hover:bg-[#0B3A66] 
-                hover:text-[#18A7A1]
-                transition-all duration-200
-              ">
-                {/* 🔥 ICONO */}
-                <Icon size={18} />
-
-                {/* TEXTO */}
-                <span className="capitalize">
-                  {item.label}
-                </span>
-              </div>
-            </li>
-          );
-        })}
+    <aside className="w-60 bg-[#FFF8F0]/95 backdrop-blur-md border-r border-[#C00000]/20 min-h-[calc(100vh-4rem)] p-4 shadow-sm flex flex-col">
+      <ul className="space-y-2 flex-1">
+        {items.map((item, index) => (
+          <li key={index}>
+            <button
+              type="button"
+              onClick={() => navigate(item.path)}
+              className={`
+                w-full text-left flex items-center gap-3 px-4 py-2 rounded-lg font-medium text-black
+                transition-all duration-150 ease-out
+                hover:bg-[#C00000]/10 hover:scale-[1.03]
+                active:scale-95 active:bg-[#C00000]/20
+                ${isActive(item.path) ? "bg-[#C00000]/15 border-l-4 border-[#C00000]" : ""}
+              `}
+            >
+              <span className="text-sm">
+                {(() => {
+                  const Icon = item.icon;
+                  return <Icon className="w-5 h-5" />;
+                })()}
+              </span>
+              <span>{item.label}</span>
+            </button>
+          </li>
+        ))}
       </ul>
 
+      <button
+        onClick={handleLogout}
+        className="
+          w-full flex items-center gap-3 px-4 py-2 rounded-lg font-medium text-white
+          bg-[#C00000]
+          transition-all duration-150 ease-out
+          hover:bg-[#A00000]
+          hover:scale-[1.02]
+          active:scale-95
+          cursor-pointer
+          mt-4 border-t border-[#C00000]/30 pt-4
+        "
+      >
+        <span className="text-lg">🚪</span>
+        <span>Cerrar Sesión</span>
+      </button>
     </aside>
   );
 };
