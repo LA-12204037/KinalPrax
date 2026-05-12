@@ -6,79 +6,80 @@ import fondo from "../../../assets/img/fondo.png";
 
 const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(true);
-
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const role = (localStorage.getItem("userRole") || "").toUpperCase();
-
     if (role.includes("ADMIN")) {
       navigate("/dashboard", { replace: true });
     }
   }, [navigate]);
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center">
-
-      {/* Fondo */}
+    <div className="relative min-h-screen flex items-center justify-center p-4 font-sans overflow-hidden">
+      
+      {/* Capa de fondo con imagen */}
       <div
         className="absolute inset-0 bg-cover bg-center"
         style={{ backgroundImage: `url(${fondo})` }}
       />
-      <div className="absolute inset-0 backdrop-blur-sm bg-black/40" />
+      
+      {/* Overlay sutil */}
+      <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-[2px]" />
 
-      {/* Contenido */}
-      <div className="w-full max-w-md text-white px-6 backdrop-blur-sm bg-black/40 p-6 rounded-lg relative">
-
-        {/* Logo */}
-        <div className="flex justify-center mb-6">
-          <div className="w-24 h-24 bg-white flex items-center justify-center rounded-lg">
-            <img
-              src="/src/assets/img/logo.png"
-              alt="Logo"
-              className="w-24 h-20 object-contain"
-            />
+      {/* Tarjeta Contenedora Principal */}
+      <div className="relative w-full max-w-md bg-white rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.3)] transition-all duration-500">
+        <div className="p-10 md:p-12">
+          
+          {/* Logo y Nombre unificado */}
+          <div className="text-center mb-8">
+             <h1 className="text-4xl font-bold text-[#115e8d] tracking-tight">
+               Kinal<span className="text-[#3fa1cc]">Prax</span>
+             </h1>
           </div>
-        </div>
 
-        {/* Título dinámico */}
-        <h1 className="text-center text-2xl tracking-widest mb-6">
-          {isLogin ? "KinalPrax" : "Recuperar Contraseña"}
-        </h1>
+          <h2 className="text-left font-bold text-gray-800 mb-6 text-lg">
+            {isLogin ? "Iniciar Sesión" : "Recuperar Contraseña"}
+          </h2>
 
-        {/* 🔥 AQUÍ ESTÁ EL CAMBIO */}
-        {isLogin ? (
-          <LoginForm onForgot={() => setIsLogin(false)} />
-        ) : (
-          <ForgotPasswordForm onSwitch={() => setIsLogin(true)} />
-        )}
+          {/* Formulario Dinámico */}
+          <div className="min-h-[250px] animate-in fade-in duration-500">
+            {isLogin ? (
+              <LoginForm 
+                onForgot={() => setIsLogin(false)} 
+                onRegister={() => console.log("Ir a registro")} 
+              />
+            ) : (
+              <ForgotPasswordForm onSwitch={() => setIsLogin(true)} />
+            )}
+          </div>
 
-        {/* Opciones */}
-        <div className="flex justify-between text-sm mt-4 text-white/80">
-          {isLogin ? (
-            <>
-              <label>
-                <input type="checkbox" className="mr-1" />
-                Remember me
-              </label>
-
-              <span
-                className="cursor-pointer hover:underline"
+          {/* Opciones de pie de página (Solo cuando es Login) */}
+          {isLogin && (
+            <div className="mt-6 flex flex-col items-center gap-4 border-t border-gray-100 pt-6">
+               <button
+                type="button"
+                className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider hover:text-blue-600 transition-colors"
                 onClick={() => setIsLogin(false)}
               >
-                Forgot Password?
-              </span>
-            </>
-          ) : (
-            <span
-              className="cursor-pointer hover:underline mx-auto"
-              onClick={() => setIsLogin(true)}
-            >
-              Volver al login
-            </span>
+                ¿Olvidaste tu contraseña?
+              </button>
+            </div>
           )}
-        </div>
 
+          {!isLogin && (
+            <div className="mt-6 text-center">
+              <button
+                type="button"
+                className="text-sm font-bold text-[#3fa1cc] hover:underline"
+                onClick={() => setIsLogin(true)}
+              >
+                Volver al inicio de sesión
+              </button>
+            </div>
+          )}
+
+        </div>
       </div>
     </div>
   );

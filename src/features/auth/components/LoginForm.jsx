@@ -2,8 +2,9 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-hot-toast";
+import { Mail, Lock } from "lucide-react";
 
-export const LoginForm = ({ onForgot }) => {
+export const LoginForm = ({ onForgot, onRegister }) => {
   const [emailOrUsername, setEmailOrUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -13,7 +14,7 @@ export const LoginForm = ({ onForgot }) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // 🔥 VALIDACIÓN
+    // 🔥 VALIDACIÓN (Lógica Anterior)
     if (!emailOrUsername.trim() || !password.trim()) {
       toast.error("Por favor ingresa usuario y contraseña.");
       return;
@@ -36,19 +37,19 @@ export const LoginForm = ({ onForgot }) => {
       const role = data?.userDetails?.role ?? "";
       const isAdmin = role.toUpperCase().includes("ADMIN");
 
-      // ❌ fallo backend
+      // ❌ fallo backend (Lógica Anterior)
       if (!data?.success) {
         toast.error(data?.message || "Inicio de sesión falló.");
         return;
       }
 
-      // ❌ no admin
+      // ❌ no admin (Lógica Anterior)
       if (!isAdmin) {
         toast.error("Acceso restringido: solo administradores.");
         return;
       }
 
-      // ✅ guardar datos
+      // ✅ guardar datos (Lógica Anterior)
       localStorage.setItem("authToken", data.token ?? "");
       localStorage.setItem("userRole", role);
       localStorage.setItem(
@@ -58,7 +59,7 @@ export const LoginForm = ({ onForgot }) => {
 
       toast.success("Bienvenido administrador");
 
-      // 🔥 REDIRECCIÓN
+      // 🔥 REDIRECCIÓN (Lógica Anterior)
       navigate("/dashboard", { replace: true });
 
     } catch (error) {
@@ -74,61 +75,61 @@ export const LoginForm = ({ onForgot }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-5">
-
-      {/* EMAIL / USUARIO */}
-      <div>
-        <label className="block text-sm font-medium text-gray-800 mb-1.5">
-          Email o Usuario
-        </label>
+    <form onSubmit={handleSubmit} className="space-y-4">
+      {/* INPUT EMAIL / USUARIO (Diseño Nuevo) */}
+      <div className="relative">
+        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <div className="bg-gray-200 p-1.5 rounded-md">
+            <Mail className="h-4 w-4 text-gray-500" />
+          </div>
+        </div>
         <input
           type="text"
           value={emailOrUsername}
           onChange={(e) => setEmailOrUsername(e.target.value)}
-          placeholder="correo@ejemplo.com o usuario"
-          className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg 
-                     focus:ring-2 focus:ring-blue-500 outline-none"
+          placeholder="Correo o Usuario"
+          className="block w-full pl-12 pr-3 py-3 border border-gray-200 rounded-xl bg-gray-50 focus:ring-2 focus:ring-blue-400 outline-none transition-all placeholder:text-gray-400 text-gray-700"
         />
       </div>
 
-      {/* PASSWORD */}
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1.5">
-          Contraseña
-        </label>
+      {/* INPUT PASSWORD (Diseño Nuevo) */}
+      <div className="relative">
+        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <div className="bg-[#3fa1cc] p-1.5 rounded-md">
+            <Lock className="h-4 w-4 text-white" />
+          </div>
+        </div>
         <input
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          placeholder="••••••••"
-          className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg 
-                     focus:ring-2 focus:ring-blue-500 outline-none"
+          placeholder="Contraseña"
+          className="block w-full pl-12 pr-3 py-3 border border-gray-200 rounded-xl bg-gray-50 focus:ring-2 focus:ring-blue-400 outline-none transition-all placeholder:text-gray-400 text-gray-700"
         />
       </div>
 
-      {/* BOTÓN */}
+      {/* BOTÓN (Diseño Nuevo con Lógica de Carga) */}
       <button
         type="submit"
         disabled={loading}
-        className="w-full bg-main-blue hover:opacity-90 text-white 
-                   font-medium py-2.5 px-4 rounded-lg 
-                   transition-colors duration-200 text-sm
-                   disabled:opacity-70 disabled:cursor-not-allowed"
+        className="w-full mt-4 bg-gradient-to-r from-[#0f4c75] to-[#1b4965] hover:from-[#1b4965] hover:to-[#0f4c75] text-white font-semibold py-3 px-4 rounded-xl shadow-lg transition-all transform active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed"
       >
         {loading ? "Verificando..." : "Iniciar Sesión"}
       </button>
 
-      {/* LINK */}
-      <p className="text-center text-sm">
-        <button
-          type="button"
-          onClick={onForgot}
-          className="text-main-blue hover:underline"
-        >
-          ¿Olvidaste tu contraseña?
-        </button>
-      </p>
-
+      {/* FOOTER (Diseño Unificado) */}
+      <div className="pt-4 text-center">
+        <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider">
+          ¿No tienes cuenta?{" "}
+          <button 
+            type="button" 
+            onClick={onRegister}
+            className="text-gray-700 font-bold hover:underline ml-1"
+          >
+            Regístrate
+          </button>
+        </p>
+      </div>
     </form>
   );
 };
