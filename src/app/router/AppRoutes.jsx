@@ -30,7 +30,7 @@ export const AppRoutes = () => {
       <Route path="/" element={<AuthPage />} />
       <Route path="/login" element={<Navigate to="/" replace />} />
 
-      {/* PROTEGIDO POR ROLE CON RUTAS ANIDADAS */}
+      {/* PROTEGIDO POR ROLE */}
       <Route 
         path="/dashboard" 
         element={
@@ -39,19 +39,22 @@ export const AppRoutes = () => {
           </RequireAdmin>
         }
       >
-        {/* Rutas internas del dashboard (se renderizan en el <Outlet />) */}
+        {/* Rutas internas (Paths relativos, sin "/" al inicio) */}
         <Route path="company" element={<Company />} />
         <Route path="evidence" element={<Evidence />} />
         <Route path="institud" element={<Institud />} />
         <Route path="practice" element={<Practice />} />
-        <Route path="hours" element={<ReposteHours />} />
+        
+        {/* Ajustado para coincidir con el path del Sidebar que pasaste */}
+        <Route path="reposteHoursmodel" element={<ReposteHours />} />
+        
         <Route path="review" element={<Review />} />
         <Route path="student" element={<Student />} />
         <Route path="supervisor" element={<Supervisor />} />
         <Route path="task" element={<Task />} />
         <Route path="user" element={<User />} />
         
-        {/* Redirección opcional: al entrar a /dashboard va a /dashboard/user */}
+        {/* Al entrar a /dashboard, muestra por defecto el Dashboard o Usuario */}
         <Route index element={<Navigate to="user" replace />} />
       </Route>
 

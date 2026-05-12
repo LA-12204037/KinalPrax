@@ -8,22 +8,23 @@ import {
   UserIcon,
   ShieldCheckIcon,
   UsersIcon,
+  ArrowLeftOnRectangleIcon
 } from '@heroicons/react/24/outline'
 
 export const Sidebar = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   const location = useLocation();
+
   const items = [
-   { label: "Dashboard", path: "/dashboard", icon: BuildingOffice2Icon },
-    { label: "Compañia", path: "/dashboard/company", icon: BuildingOffice2Icon },
-    { label: "Evidecia", path: "/dashboard/evidence", icon: DocumentTextIcon },
+    { label: "Compañía", path: "/dashboard/company", icon: BuildingOffice2Icon },
+    { label: "Evidencia", path: "/dashboard/evidence", icon: DocumentTextIcon },
     { label: "Instituto", path: "/dashboard/institud", icon: AcademicCapIcon },
-    { label: "Practica", path: "/dashboard/practice", icon: ClipboardDocumentListIcon },
-    { label: "Reporte de horas", path: "/dashboard/reposteHoursmodel", icon: ClockIcon },
+    { label: "Práctica", path: "/dashboard/practice", icon: ClipboardDocumentListIcon },
+    { label: "Reporte de Horas", path: "/dashboard/reposteHoursmodel", icon: ClockIcon },
     { label: "Reseña", path: "/dashboard/review", icon: ClockIcon },
     { label: "Estudiante", path: "/dashboard/student", icon: UserIcon },
-    { label: "supervisor", path: "/dashboard/supervisor", icon: ShieldCheckIcon },
-    { label: "task", path: "/dashboard/task", icon: ShieldCheckIcon },
+    { label: "Supervisor", path: "/dashboard/supervisor", icon: ShieldCheckIcon },
+    { label: "Task", path: "/dashboard/task", icon: ShieldCheckIcon },
     { label: "Usuario", path: "/dashboard/user", icon: UsersIcon },
   ];
 
@@ -39,49 +40,70 @@ export const Sidebar = () => {
   };
 
   return (
-    <aside className="w-60 bg-[#FFF8F0]/95 backdrop-blur-md border-r border-[#C00000]/20 min-h-[calc(100vh-4rem)] p-4 shadow-sm flex flex-col">
-      <ul className="space-y-2 flex-1">
-        {items.map((item, index) => (
-          <li key={index}>
-            <button
-              type="button"
-              onClick={() => navigate(item.path)}
-              className={`
-                w-full text-left flex items-center gap-3 px-4 py-2 rounded-lg font-medium text-black
-                transition-all duration-150 ease-out
-                hover:bg-[#C00000]/10 hover:scale-[1.03]
-                active:scale-95 active:bg-[#C00000]/20
-                ${isActive(item.path) ? "bg-[#C00000]/15 border-l-4 border-[#C00000]" : ""}
-              `}
-            >
-              <span className="text-sm">
-                {(() => {
-                  const Icon = item.icon;
-                  return <Icon className="w-5 h-5" />;
-                })()}
-              </span>
-              <span>{item.label}</span>
-            </button>
-          </li>
-        ))}
-      </ul>
+    <aside className="w-64 bg-gradient-to-b from-[#FFF8F0] to-[#FFF1E0] border-r border-[#C00000]/10 min-h-[calc(100vh-4rem)] p-5 shadow-[4px_0_20px_rgba(0,0,0,0.03)] flex flex-col">
+      {/* Decoración superior sutil */}
+      <div className="mb-6 px-4">
+        <div className="h-1.5 w-10 bg-[#C00000] rounded-full opacity-30"></div>
+      </div>
 
-      <button
-        onClick={handleLogout}
-        className="
-          w-full flex items-center gap-3 px-4 py-2 rounded-lg font-medium text-white
-          bg-[#C00000]
-          transition-all duration-150 ease-out
-          hover:bg-[#A00000]
-          hover:scale-[1.02]
-          active:scale-95
-          cursor-pointer
-          mt-4 border-t border-[#C00000]/30 pt-4
-        "
-      >
-        <span className="text-lg">🚪</span>
-        <span>Cerrar Sesión</span>
-      </button>
+      <nav className="flex-1 overflow-y-auto pr-2 custom-scrollbar">
+        <ul className="space-y-1.5">
+          {items.map((item, index) => {
+            const Icon = item.icon;
+            const active = isActive(item.path);
+            
+            return (
+              <li key={index}>
+                <button
+                  type="button"
+                  onClick={() => navigate(item.path)}
+                  className={`
+                    relative w-full group flex items-center gap-3 px-4 py-3 rounded-2xl font-semibold 
+                    transition-all duration-300 ease-in-out
+                    ${active 
+                      ? "text-[#C00000] bg-white shadow-md shadow-[#C00000]/5 scale-[1.02]" 
+                      : "text-[#2C1506]/70 hover:bg-[#C00000]/5 hover:text-[#C00000]"}
+                  `}
+                >
+                  {/* Indicador lateral activo */}
+                  {active && (
+                    <span className="absolute left-0 w-1.5 h-6 bg-[#C00000] rounded-r-full" />
+                  )}
+                  
+                  <Icon className={`
+                    w-5 h-5 transition-transform duration-300 group-hover:scale-110
+                    ${active ? "text-[#C00000]" : "text-[#2C1506]/50 group-hover:text-[#C00000]"}
+                  `} />
+                  
+                  <span className="text-[14px] tracking-tight">{item.label}</span>
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
+
+      {/* Botón de Cerrar Sesión Estilizado */}
+      <div className="mt-6 pt-6 border-t border-[#C00000]/10">
+        <button
+          onClick={handleLogout}
+          className="
+            group w-full flex items-center justify-center gap-3 px-4 py-3 rounded-2xl font-bold text-white
+            bg-gradient-to-r from-[#C00000] to-[#E60000]
+            shadow-lg shadow-[#C00000]/20
+            transition-all duration-300
+            hover:shadow-[#C00000]/40 hover:-translate-y-0.5
+            active:scale-95
+            cursor-pointer
+          "
+        >
+          <ArrowLeftOnRectangleIcon className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+          <span>Cerrar Sesión</span>
+        </button>
+        <p className="text-[10px] text-center text-[#2C1506]/40 mt-4 uppercase tracking-[0.2em] font-bold">
+          System Panel v2.0
+        </p>
+      </div>
     </aside>
   );
 };
