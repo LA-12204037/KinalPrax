@@ -1,160 +1,105 @@
-import { useState } from "react";
-import { PlusIcon, PencilIcon, TrashIcon, CheckIcon, XMarkIcon } from "@heroicons/react/24/outline";
-
-const mockCompanies = [
-  { id: 1, name: "Tech Solutions S.A.", nit: "123456789", sector: "Tecnología", contact: "contacto@techsolutions.com", phone: "25412345" },
-  { id: 2, name: "Constructora Moderna", nit: "987654321", sector: "Construcción", contact: "info@constructora.com", phone: "78945612" },
-];
+import { useEffect, useState } from "react";
+import { useCompanyStore } from "../users/store/companyStore.js"; 
+import { useUIStore } from "../auth/uiStore.js";
+import { showError } from "../../shared/utils/toast.js";
+import { Spinner } from "@material-tailwind/react";
+import { CompanyModal } from "./CompanyModal";
+import { showConfirmToast } from "../../features/auth/components/ConfirmModal";
 
 export const Company = () => {
-  const [companies, setCompanies] = useState(mockCompanies);
-  const [showModal, setShowModal] = useState(false);
-  const [editingId, setEditingId] = useState(null);
-  const [formData, setFormData] = useState({ name: "", nit: "", sector: "", contact: "", phone: "" });
+  const {
+    companies = [],
+    loading,
+    error,
+    getCompanies,
+    deleteCompany // ✅ Función corregida
+  } = useCompanyStore();
 
-  const handleAdd = () => {
-    setEditingId(null);
-    setFormData({ name: "", nit: "", sector: "", contact: "", phone: "" });
-    setShowModal(true);
-  };
+  const [openModal, setOpenModal] = useState(false);
+  const [selectedCompany, setSelectedCompany] = useState(null);
 
-  const handleEdit = (company) => {
-    setEditingId(company.id);
-    setFormData(company);
-    setShowModal(true);
-  };
+  useEffect(() => {
+    getCompanies();
+  }, [getCompanies]);
 
-  const handleDelete = (id) => {
-    if (confirm("¿Está seguro de que desea eliminar esta empresa?")) {
-      setCompanies(companies.filter(c => c.id !== id));
-    }
-  };
+  useEffect(() => {
+    if (error) showError(error);
+  }, [error]);
 
-  const handleSave = () => {
-    if (editingId) {
-      setCompanies(companies.map(c => c.id === editingId ? { ...formData, id: editingId } : c));
-    } else {
-      setCompanies([...companies, { ...formData, id: Date.now() }]);
-    }
-    setShowModal(false);
-  };
+  if (loading && companies.length === 0) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <Spinner className="h-10 w-10 text-blue-500" />
+      </div>
+    );
+  }
 
   return (
-    <section className="space-y-6 p-6">
-      <div className="flex items-center justify-between">
+    <div className="p-4">
+      {/* HEADER */}
+      <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-[#2C1506]">Empresas</h1>
-          <p className="text-sm text-[#2C1506]/80 mt-1">Gestión de empresas afiliadas</p>
+          <h1 className="text-3xl font-bold text-main-blue">Gestión de Empresas</h1>
+          <p className="text-gray-500 text-sm">Administra sedes legales y contactos</p>
         </div>
         <button
-          onClick={handleAdd}
-          className="flex items-center gap-2 bg-[#C00000] text-white px-4 py-2 rounded-lg hover:bg-[#A00000] transition"
+          className="bg-main-blue px-4 py-2 rounded text-white hover:opacity-90 transition font-semibold shadow-md"
+          onClick={() => { setSelectedCompany(null); setOpenModal(true); }}
         >
-          <PlusIcon className="w-5 h-5" />
-          Nueva Empresa
+          + Nueva Empresa
         </button>
       </div>
 
-      <div className="bg-white rounded-lg shadow-sm overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead className="bg-[#FFF8F0] border-b border-[#C00000]/20">
-            <tr>
-              <th className="px-6 py-3 text-left font-semibold text-[#2C1506]">Nombre</th>
-              <th className="px-6 py-3 text-left font-semibold text-[#2C1506]">NIT</th>
-              <th className="px-6 py-3 text-left font-semibold text-[#2C1506]">Sector</th>
-              <th className="px-6 py-3 text-left font-semibold text-[#2C1506]">Contacto</th>
-              <th className="px-6 py-3 text-left font-semibold text-[#2C1506]">Teléfono</th>
-              <th className="px-6 py-3 text-center font-semibold text-[#2C1506]">Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            {companies.map((company) => (
-              <tr key={company.id} className="border-b border-[#C00000]/10 hover:bg-[#FFF8F0]/50 transition">
-                <td className="px-6 py-4 text-[#2C1506] font-medium">{company.name}</td>
-                <td className="px-6 py-4 text-[#2C1506]/80">{company.nit}</td>
-                <td className="px-6 py-4 text-[#2C1506]/80">{company.sector}</td>
-                <td className="px-6 py-4 text-[#2C1506]/80">{company.contact}</td>
-                <td className="px-6 py-4 text-[#2C1506]/80">{company.phone}</td>
-                <td className="px-6 py-4 flex justify-center gap-2">
-                  <button
-                    onClick={() => handleEdit(company)}
-                    className="p-2 text-[#C00000] hover:bg-[#C00000]/10 rounded transition"
-                  >
-                    <PencilIcon className="w-4 h-4" />
-                  </button>
-                  <button
-                    onClick={() => handleDelete(company.id)}
-                    className="p-2 text-red-600 hover:bg-red-50 rounded transition"
-                  >
-                    <TrashIcon className="w-4 h-4" />
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      {/* GRID */}
+      {companies.length === 0 ? (
+        <div className="text-center py-12 bg-white rounded-xl border border-dashed border-gray-300">
+          <p className="text-gray-500">No hay empresas activas.</p>
+        </div>
+      ) : (
+        <div className="grid sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+          {companies.map((company) => (
+            <div key={company._id} className="bg-white rounded-xl shadow-md p-5 border border-gray-100 flex flex-col justify-between">
+              <div>
+                <div className="flex justify-between mb-3">
+                  <span className="px-3 py-1 text-xs rounded-full bg-blue-50 text-blue-700 font-semibold">
+                    👤 {company.encargado}
+                  </span>
+                </div>
+                <h2 className="text-xl font-bold text-main-blue mb-2">{company.nombreEmpresa}</h2>
+                <p className="text-sm text-gray-600 truncate">📧 {company.correo}</p>
+                <p className="text-sm text-gray-600">📞 {company.telefono || "N/A"}</p>
+              </div>
 
-      {showModal && (
-        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 w-96 shadow-lg">
-            <h2 className="text-xl font-bold text-[#2C1506] mb-4">
-              {editingId ? "Editar Empresa" : "Nueva Empresa"}
-            </h2>
-            <div className="space-y-4">
-              <input
-                type="text"
-                placeholder="Nombre"
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="w-full px-3 py-2 border border-[#C00000]/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C00000]"
-              />
-              <input
-                type="text"
-                placeholder="NIT"
-                value={formData.nit}
-                onChange={(e) => setFormData({ ...formData, nit: e.target.value })}
-                className="w-full px-3 py-2 border border-[#C00000]/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C00000]"
-              />
-              <input
-                type="text"
-                placeholder="Sector"
-                value={formData.sector}
-                onChange={(e) => setFormData({ ...formData, sector: e.target.value })}
-                className="w-full px-3 py-2 border border-[#C00000]/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C00000]"
-              />
-              <input
-                type="email"
-                placeholder="Contacto"
-                value={formData.contact}
-                onChange={(e) => setFormData({ ...formData, contact: e.target.value })}
-                className="w-full px-3 py-2 border border-[#C00000]/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C00000]"
-              />
-              <input
-                type="text"
-                placeholder="Teléfono"
-                value={formData.phone}
-                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                className="w-full px-3 py-2 border border-[#C00000]/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#C00000]"
-              />
+              <div className="flex gap-3 mt-6">
+                <button 
+                  className="flex-1 py-2 rounded bg-main-blue text-white text-sm"
+                  onClick={() => { setSelectedCompany(company); setOpenModal(true); }}
+                >
+                  Editar
+                </button>
+                <button 
+                  className="flex-1 py-2 rounded bg-red-600 text-white text-sm"
+                  onClick={() =>
+                    showConfirmToast({
+                      title: "Desactivar empresa",
+                      message: `¿Deseas desactivar ${company.nombreEmpresa}?`,
+                      onConfirm: () => deleteCompany(company._id), // ✅ Llamada corregida
+                    })
+                  }
+                >
+                  Desactivar
+                </button>
+              </div>
             </div>
-            <div className="flex gap-3 mt-6">
-              <button
-                onClick={handleSave}
-                className="flex-1 flex items-center justify-center gap-2 bg-[#C00000] text-white py-2 rounded-lg hover:bg-[#A00000] transition"
-              >
-                <CheckIcon className="w-4 h-4" /> Guardar
-              </button>
-              <button
-                onClick={() => setShowModal(false)}
-                className="flex-1 flex items-center justify-center gap-2 bg-gray-300 text-[#2C1506] py-2 rounded-lg hover:bg-gray-400 transition"
-              >
-                <XMarkIcon className="w-4 h-4" /> Cancelar
-              </button>
-            </div>
-          </div>
+          ))}
         </div>
       )}
-    </section>
+
+      <CompanyModal
+        isOpen={openModal}
+        onClose={() => { setOpenModal(false); setSelectedCompany(null); }}
+        company={selectedCompany}
+      />
+    </div>
   );
 };

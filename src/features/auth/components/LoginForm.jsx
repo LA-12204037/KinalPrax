@@ -22,9 +22,10 @@ export const LoginForm = ({ onForgot }) => {
     setLoading(true);
 
     try {
+      const authBaseUrl = import.meta.env.VITE_AUTH_URL ?? "http://localhost:5277";
       const authUrl =
         import.meta.env.VITE_AUTH_API_URL ??
-        "http://localhost:5277/api/v1/auth/login";
+        `${authBaseUrl.replace(/\/$/, "")}/auth/login`;
 
       const response = await axios.post(authUrl, {
         emailOrUsername: emailOrUsername.trim(),

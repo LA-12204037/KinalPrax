@@ -13,12 +13,12 @@ export const createCompany = async (data) => {
 export const updateCompany = async (id, data) => { 
   return await axiosAdmin.put(`/company/${id}`, data); 
 };
-export const deactivateCompany = async (id) => 
-  { return await axiosAdmin.put(`/company/${id}/deactivate`); 
+
+export const deactivateCompany = async (id) => {
+  return await axiosAdmin.delete(`/company/${id}`);
 };
 
-
-// Insituciones
+// Instituciones
 export const getInstitutions = async () => {
   return await axiosAdmin.get("/institud");
 };
@@ -26,15 +26,15 @@ export const getInstitutions = async () => {
 
 
 export const createInstitution = async (data) => {
-  return await axiosAdmin.post("/institud", data, buildFormDataConfig(data));
+  return await axiosAdmin.post("/institud", data);
 };
 
 export const updateInstitution = async (id, data) => {
-  return await axiosAdmin.put(`/institud/${id}`, data, buildFormDataConfig(data));
+  return await axiosAdmin.put(`/institud/${id}`, data);
 };
 
 export const deactivateInstitution = async (id) => {
-  return await axiosAdmin.put(`/institud/${id}/deactivate`);
+  return await axiosAdmin.delete(`/institud/${id}`);
 };
 
 
@@ -48,8 +48,8 @@ export const createStudentRecord = async (data) => {
 export const updateStudentRecord = async (id, data) => { 
   return await axiosAdmin.put(`/student/${id}`, data); };
 
-export const deactivateStudentRecord = async (id, status) => {
-   return await axiosAdmin.put(`/student/${id}`, { estado: status }); };
+export const deactivateStudentRecord = async (id) => {
+   return await axiosAdmin.delete(`/student/${id}`); };
 /*
 // Reservaciones
 export const getReservations = async () => api.get("/reservation");
@@ -62,14 +62,14 @@ export const changeReservationStatus = async (id, status) => api.put(`/reservati
 export const obtenerUsuarios = async () => {
    return await axiosAdmin.get("/user"); };
 
-export const obtenerUsuario = async (data) => { 
-  return await axiosAdmin.post("/user", data); };
+export const obtenerUsuario = async (id) => { 
+  return await axiosAdmin.get(`/user/${id}`); };
 
 export const actualizarUsuario = async (id, data) => { 
   return await axiosAdmin.put(`/user/${id}`, data); };
 
-export const deactivateUsuario = async (id, status) => {
-   return await axiosAdmin.put(`/user/${id}`, { estado: status }); };
+export const deactivateUsuario = async (id) => {
+   return await axiosAdmin.delete(`/user/${id}`); };
 
 
 /*
